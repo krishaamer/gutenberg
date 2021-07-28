@@ -1,0 +1,20 @@
+.block-editor-block-inspector,
+.edit-site {
+	.typography-controls {
+		.components-font-appearance-control,
+		.block-editor-line-height-control,
+		.block-editor-text-decoration-control,
+		.block-editor-text-transform-control {
+			grid-column: span 1;
+		}
+
+		.components-base-control,
+		.components-base-control__field {
+			margin-bottom: 0;
+		}
+
+		.block-editor-line-height-control input {
+			max-width: 100%;
+		}
+	}
+}
