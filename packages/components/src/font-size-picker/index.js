@@ -60,6 +60,7 @@ function FontSizePicker(
 		onChange,
 		value,
 		withSlider = false,
+		allowReset = true,
 	},
 	ref
 ) {
@@ -132,17 +133,19 @@ function FontSizePicker(
 						units={ units }
 					/>
 				) }
-				<Button
-					className="components-color-palette__clear"
-					disabled={ value === undefined }
-					onClick={ () => {
-						onChange( undefined );
-					} }
-					isSmall
-					variant="secondary"
-				>
-					{ __( 'Reset' ) }
-				</Button>
+				{ allowReset && (
+					<Button
+						className="components-color-palette__clear"
+						disabled={ value === undefined }
+						onClick={ () => {
+							onChange( undefined );
+						} }
+						isSmall
+						variant="secondary"
+					>
+						{ __( 'Reset' ) }
+					</Button>
+				) }
 			</div>
 			{ withSlider && (
 				<RangeControl

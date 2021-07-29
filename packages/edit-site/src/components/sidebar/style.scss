@@ -38,3 +38,19 @@
 		margin-bottom: 0;
 	}
 }
+
+.edit-site {
+	.components-font-size-picker__controls {
+		.components-font-size-picker__select {
+			flex: 1;
+
+			> button {
+				width: 100%;
+			}
+		}
+
+		.components-unit-control-wrapper {
+			margin-right: 0;
+		}
+	}
+}
