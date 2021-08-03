@@ -21,7 +21,6 @@ import {
 	ToggleControl,
 	withNotices,
 	__experimentalUseCustomUnits as useCustomUnits,
-	__experimentalBoxControl as BoxControl,
 } from '@wordpress/components';
 import { compose, withInstanceId, useInstanceId } from '@wordpress/compose';
 import {
@@ -76,8 +75,6 @@ const INNER_BLOCKS_TEMPLATE = [
 		},
 	],
 ];
-
-const { __Visualizer: BoxControlVisualizer } = BoxControl;
 
 function retrieveFastAverageColor() {
 	if ( ! retrieveFastAverageColor.fastAverageColor ) {
@@ -317,7 +314,6 @@ function CoverEdit( {
 		isRepeated,
 		minHeight,
 		minHeightUnit,
-		style: styleAttribute,
 		url,
 	} = attributes;
 	const {
@@ -628,10 +624,6 @@ function CoverEdit( {
 				style={ { ...style, ...blockProps.style } }
 				data-url={ url }
 			>
-				<BoxControlVisualizer
-					values={ styleAttribute?.spacing?.padding }
-					showValues={ styleAttribute?.visualizers?.padding }
-				/>
 				<ResizableCover
 					className="block-library-cover__resize-container"
 					onResizeStart={ () => {
