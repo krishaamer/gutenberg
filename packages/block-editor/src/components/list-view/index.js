@@ -11,6 +11,7 @@ import {
 	useMemo,
 	useRef,
 	useReducer,
+	useState,
 } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
@@ -19,9 +20,7 @@ import { __ } from '@wordpress/i18n';
  */
 import ListViewBranch from './branch';
 import { ListViewContext } from './context';
-import ListViewDropIndicator from './drop-indicator';
 import useListViewClientIds from './use-list-view-client-ids';
-import useListViewDropZone from './use-list-view-drop-zone';
 import { store as blockEditorStore } from '../../store';
 
 const noop = () => {};
@@ -57,6 +56,7 @@ export default function ListView( {
 	__experimentalPersistentListViewFeatures,
 	...props
 } ) {
+	const [ isDragging, setDragging ] = useState( false );
 	const { clientIdsTree, selectedClientIds } = useListViewClientIds(
 		blocks,
 		showOnlyCurrentHierarchy,
@@ -72,9 +72,8 @@ export default function ListView( {
 	);
 	const [ expandedState, setExpandedState ] = useReducer( expanded, {} );
 
-	const { ref: dropZoneRef, target: blockDropTarget } = useListViewDropZone();
 	const elementRef = useRef();
-	const treeGridRef = useMergeRefs( [ elementRef, dropZoneRef ] );
+	const treeGridRef = useMergeRefs( [ elementRef ] );
 
 	const isMounted = useRef( false );
 	useEffect( () => {
@@ -111,6 +110,8 @@ export default function ListView( {
 			expand,
 			collapse,
 			animate,
+			isDragging,
+			setDragging,
 		} ),
 		[
 			__experimentalFeatures,
@@ -120,15 +121,13 @@ export default function ListView( {
 			expand,
 			collapse,
 			animate,
+			isDragging,
+			setDragging,
 		]
 	);
 
 	return (
 		<>
-			<ListViewDropIndicator
-				listViewRef={ elementRef }
-				blockDropTarget={ blockDropTarget }
-			/>
 			<TreeGrid
 				className="block-editor-list-view-tree"
 				aria-label={ __( 'Block navigation structure' ) }

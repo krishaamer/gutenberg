@@ -44,13 +44,13 @@ function TreeGridRow(
 			initial={ animateOnMount ? 'init' : false }
 			animate={ 'open' }
 			variants={ animate ? TREE_GRID_ROW_VARIANTS : NO_MOTION_VARIANTS }
-			{ ...props }
 			ref={ ref }
 			role="row"
 			aria-level={ level }
 			aria-posinset={ positionInSet }
 			aria-setsize={ setSize }
 			aria-expanded={ isExpanded }
+			{ ...props }
 		>
 			{ children }
 		</motion.tr>

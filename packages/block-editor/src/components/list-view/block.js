@@ -48,18 +48,11 @@ export default function ListViewBlock( {
 	const cellRef = useRef( null );
 	const [ isHovered, setIsHovered ] = useState( false );
 	const { clientId } = block;
-	const { isDragging, blockParents } = useSelect(
+	const { blockParents } = useSelect(
 		( select ) => {
-			const {
-				isBlockBeingDragged,
-				isAncestorBeingDragged,
-				getBlockParents,
-			} = select( blockEditorStore );
+			const { getBlockParents } = select( blockEditorStore );
 
 			return {
-				isDragging:
-					isBlockBeingDragged( clientId ) ||
-					isAncestorBeingDragged( clientId ),
 				blockParents: getBlockParents( clientId ),
 			};
 		},
@@ -82,6 +75,9 @@ export default function ListViewBlock( {
 		__experimentalPersistentListViewFeatures: withExperimentalPersistentListViewFeatures,
 		isTreeGridMounted,
 		animate,
+		setDragging,
+		collapse,
+		expand,
 	} = useListViewContext();
 	const listViewBlockSettingsClassName = classnames(
 		'block-editor-list-view-block__menu-cell',
@@ -130,8 +126,24 @@ export default function ListViewBlock( {
 		'is-last-of-selected-branch':
 			withExperimentalPersistentListViewFeatures &&
 			isLastOfSelectedBranch,
-		'is-dragging': isDragging,
+		//'is-dragging': isDragging,
 	} );
+
+	const onDragStart = () => {
+		setDragging( true );
+		collapse( clientId );
+	};
+
+	const onDragEnd = () => {
+		setDragging( false );
+		expand( clientId );
+	};
+
+	// (event, info)
+	const onDrag = () => {
+		//TODO: get info drag offset, (each item should be 36px)
+		//Find target landing, perform check to swap item as we drag
+	};
 
 	return (
 		<TreeGridRow
@@ -148,6 +160,11 @@ export default function ListViewBlock( {
 			isExpanded={ isExpanded }
 			animate={ animate }
 			animateOnMount={ animateToggleOpen }
+			drag="y"
+			whileDrag={ { scale: 1.2 } }
+			onDragStart={ onDragStart }
+			onDrag={ onDrag }
+			onDragEnd={ onDragEnd }
 		>
 			<TreeGridCell
 				className="block-editor-list-view-block__contents-cell"
