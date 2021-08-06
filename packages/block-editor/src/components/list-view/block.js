@@ -15,7 +15,7 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { moreVertical } from '@wordpress/icons';
-import { useState, useRef, useEffect } from '@wordpress/element';
+import { useRef, useEffect } from '@wordpress/element';
 import { useDispatch, useSelect } from '@wordpress/data';
 
 /**
@@ -29,6 +29,26 @@ import ListViewBlockContents from './block-contents';
 import BlockSettingsDropdown from '../block-settings-menu/block-settings-dropdown';
 import { useListViewContext } from './context';
 import { store as blockEditorStore } from '../../store';
+
+function findCurrentPosition( tree, id, parentId = '' ) {
+	for ( let index = 0; index < tree.length; index++ ) {
+		const block = tree[ index ];
+		if ( block.clientId === id ) {
+			return { parentId, index, block, tree };
+		}
+		if ( block.innerBlocks && block.innerBlocks.length > 0 ) {
+			const match = findCurrentPosition(
+				block.innerBlocks,
+				id,
+				block.clientId
+			);
+			if ( match ) {
+				return match;
+			}
+		}
+	}
+	return false;
+}
 
 export default function ListViewBlock( {
 	block,
@@ -46,7 +66,6 @@ export default function ListViewBlock( {
 	animateToggleOpen,
 } ) {
 	const cellRef = useRef( null );
-	const [ isHovered, setIsHovered ] = useState( false );
 	const { clientId } = block;
 	const { blockParents } = useSelect(
 		( select ) => {
@@ -66,10 +85,6 @@ export default function ListViewBlock( {
 
 	const hasSiblings = siblingBlockCount > 0;
 	const hasRenderedMovers = showBlockMovers && hasSiblings;
-	const moverCellClassName = classnames(
-		'block-editor-list-view-block__mover-cell',
-		{ 'is-visible': isHovered }
-	);
 	const {
 		__experimentalFeatures: withExperimentalFeatures,
 		__experimentalPersistentListViewFeatures: withExperimentalPersistentListViewFeatures,
@@ -79,10 +94,17 @@ export default function ListViewBlock( {
 		setDraggingId,
 		collapse,
 		expand,
+		tree,
+		hoveredId,
+		setHoveredId,
 	} = useListViewContext();
+	const moverCellClassName = classnames(
+		'block-editor-list-view-block__mover-cell',
+		{ 'is-visible': hoveredId === clientId }
+	);
 	const listViewBlockSettingsClassName = classnames(
 		'block-editor-list-view-block__menu-cell',
-		{ 'is-visible': isHovered }
+		{ 'is-visible': hoveredId === clientId }
 	);
 
 	const isFaded =
@@ -116,13 +138,20 @@ export default function ListViewBlock( {
 		? toggleBlockHighlight
 		: () => {};
 
+	//TODO: idea keep track of hovered
 	const onMouseEnter = () => {
-		setIsHovered( true );
-		highlightBlock( clientId, true );
+		if ( clientId !== draggingId ) {
+			setHoveredId( clientId );
+			if ( ! draggingId ) {
+				highlightBlock( clientId, true );
+			}
+		}
 	};
 	const onMouseLeave = () => {
-		setIsHovered( false );
-		highlightBlock( clientId, false );
+		setHoveredId( false );
+		if ( ! draggingId ) {
+			highlightBlock( clientId, false );
+		}
 	};
 
 	const classes = classnames( {
@@ -137,6 +166,7 @@ export default function ListViewBlock( {
 	} );
 
 	const onDragStart = () => {
+		setHoveredId( false );
 		setDraggingId( clientId );
 		collapse( clientId );
 	};
@@ -147,9 +177,21 @@ export default function ListViewBlock( {
 	};
 
 	// (event, info)
-	const onDrag = () => {
-		//TODO: get info drag offset, (each item should be 36px)
-		//Find target landing, perform check to swap item as we drag
+	const blockDrag = () => {
+		if ( ! hoveredId ) {
+			return;
+		}
+		const hover = findCurrentPosition( tree, hoveredId );
+		const current = findCurrentPosition( tree, draggingId );
+		// siblings, next to each other
+		if (
+			current.block.parentId === current.block.parentId &&
+			Math.abs( hover.index - current.index ) === 1
+		) {
+			//TODO: YOU ARE HERE, don't mutate the tree
+			current.tree[ current.index ] = hover.block;
+			current.tree[ hover.index ] = current.block;
+		}
 	};
 
 	return (
@@ -170,8 +212,13 @@ export default function ListViewBlock( {
 			drag="y"
 			whileDrag={ { scale: 1.2 } }
 			onDragStart={ onDragStart }
-			onDrag={ onDrag }
+			onDrag={ blockDrag }
 			onDragEnd={ onDragEnd }
+			style={
+				draggingId === clientId
+					? { pointerEvents: 'none', zIndex: 1, background: 'white' }
+					: {}
+			}
 		>
 			<TreeGridCell
 				className="block-editor-list-view-block__contents-cell"

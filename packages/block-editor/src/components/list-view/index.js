@@ -1,4 +1,9 @@
 /**
+ * External dependencies
+ */
+import { clone } from 'lodash';
+
+/**
  * WordPress dependencies
  */
 
@@ -41,12 +46,15 @@ const expanded = ( state, action ) => {
  * present at the very top of the navigation grid.
  *
  * @param {Object}   props                                          Components props.
- * @param {Array}    props.blocks                                   Custom subset of block client IDs to be used instead of the default hierarchy.
+ * @param {Array}    props.blocks                                   Custom subset of block client IDs to be used
+ *                                                                  instead of the default hierarchy.
  * @param {Function} props.onSelect                                 Block selection callback.
  * @param {boolean}  props.showNestedBlocks                         Flag to enable displaying nested blocks.
- * @param {boolean}  props.showOnlyCurrentHierarchy                 Flag to limit the list to the current hierarchy of blocks.
+ * @param {boolean}  props.showOnlyCurrentHierarchy                 Flag to limit the list to the current hierarchy of
+ *                                                                  blocks.
  * @param {boolean}  props.__experimentalFeatures                   Flag to enable experimental features.
- * @param {boolean}  props.__experimentalPersistentListViewFeatures Flag to enable features for the Persistent List View experiment.
+ * @param {boolean}  props.__experimentalPersistentListViewFeatures Flag to enable features for the Persistent List
+ *                                                                  View experiment.
  */
 export default function ListView( {
 	blocks,
@@ -57,12 +65,14 @@ export default function ListView( {
 	...props
 } ) {
 	const [ draggingId, setDraggingId ] = useState( false );
+	const [ hoveredId, setHoveredId ] = useState( false );
 	const { clientIdsTree, selectedClientIds } = useListViewClientIds(
 		blocks,
 		showOnlyCurrentHierarchy,
 		__experimentalPersistentListViewFeatures,
 		draggingId
 	);
+	const [ tree, setTree ] = useState( clientIdsTree );
 	const { selectBlock } = useDispatch( blockEditorStore );
 	const selectEditorBlock = useCallback(
 		( clientId ) => {
@@ -113,6 +123,10 @@ export default function ListView( {
 			animate,
 			draggingId,
 			setDraggingId,
+			tree,
+			setTree,
+			hoveredId,
+			setHoveredId,
 		} ),
 		[
 			__experimentalFeatures,
@@ -124,8 +138,22 @@ export default function ListView( {
 			animate,
 			draggingId,
 			setDraggingId,
+			tree,
+			setTree,
+			hoveredId,
+			setHoveredId,
 		]
 	);
+
+	//TODO: mouseover on items highlights blocks and triggers a render check on all branches
+	//TODO: used in prototyping, polish this more
+	useEffect( () => {
+		if ( draggingId ) {
+			setTree( clone( clientIdsTree ) );
+		} else {
+			setTree( clientIdsTree );
+		}
+	}, [ draggingId ] );
 
 	return (
 		<>
@@ -139,7 +167,7 @@ export default function ListView( {
 			>
 				<ListViewContext.Provider value={ contextValue }>
 					<ListViewBranch
-						blocks={ clientIdsTree }
+						blocks={ draggingId ? tree : clientIdsTree }
 						selectBlock={ selectEditorBlock }
 						selectedBlockClientIds={ selectedClientIds }
 						{ ...props }
