@@ -30,7 +30,6 @@ export default function ListViewBranch( props ) {
 		isBranchSelected = false,
 		isLastOfBranch = false,
 		animateToggleOpen = false,
-		draggingId,
 	} = props;
 
 	const isTreeRoot = ! parentBlockClientId;
@@ -123,7 +122,6 @@ export default function ListViewBranch( props ) {
 							terminatedLevels={ terminatedLevels }
 							isExpanded={ isExpanded }
 							animateToggleOpen={ animateToggle }
-							draggingId={ draggingId }
 						/>
 						{ hasNestedBranch && isExpanded && (
 							<ListViewBranch
@@ -141,7 +139,6 @@ export default function ListViewBranch( props ) {
 								level={ level + 1 }
 								terminatedLevels={ updatedTerminatedLevels }
 								animateToggleOpen={ animateToggle }
-								draggingId={ draggingId }
 							/>
 						) }
 					</Fragment>

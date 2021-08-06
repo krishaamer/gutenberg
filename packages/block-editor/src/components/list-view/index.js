@@ -111,6 +111,7 @@ export default function ListView( {
 			expand,
 			collapse,
 			animate,
+			draggingId,
 			setDraggingId,
 		} ),
 		[
@@ -121,6 +122,7 @@ export default function ListView( {
 			expand,
 			collapse,
 			animate,
+			draggingId,
 			setDraggingId,
 		]
 	);
@@ -140,7 +142,6 @@ export default function ListView( {
 						blocks={ clientIdsTree }
 						selectBlock={ selectEditorBlock }
 						selectedBlockClientIds={ selectedClientIds }
-						draggingId={ draggingId }
 						{ ...props }
 					/>
 				</ListViewContext.Provider>

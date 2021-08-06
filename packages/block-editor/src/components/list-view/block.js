@@ -44,7 +44,6 @@ export default function ListViewBlock( {
 	showBlockMovers,
 	isExpanded,
 	animateToggleOpen,
-	draggingId, //pass down to force render
 } ) {
 	const cellRef = useRef( null );
 	const [ isHovered, setIsHovered ] = useState( false );
@@ -76,6 +75,7 @@ export default function ListViewBlock( {
 		__experimentalPersistentListViewFeatures: withExperimentalPersistentListViewFeatures,
 		isTreeGridMounted,
 		animate,
+		draggingId,
 		setDraggingId,
 		collapse,
 		expand,
@@ -84,6 +84,12 @@ export default function ListViewBlock( {
 		'block-editor-list-view-block__menu-cell',
 		{ 'is-visible': isHovered }
 	);
+
+	const isFaded =
+		draggingId &&
+		draggingId !== clientId &&
+		block?.dropSibling === false &&
+		block?.dropContainer === false;
 
 	// If ListView has experimental features related to the Persistent List View,
 	// only focus the selected list item on mount; otherwise the list would always
@@ -118,12 +124,6 @@ export default function ListViewBlock( {
 		setIsHovered( false );
 		highlightBlock( clientId, false );
 	};
-
-	const isFaded =
-		draggingId &&
-		draggingId !== clientId &&
-		block?.dropSibling === false &&
-		block?.dropContainer === false;
 
 	const classes = classnames( {
 		'block-editor-list-view-leaf': true,
