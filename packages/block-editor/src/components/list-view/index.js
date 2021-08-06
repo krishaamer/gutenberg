@@ -56,11 +56,12 @@ export default function ListView( {
 	__experimentalPersistentListViewFeatures,
 	...props
 } ) {
-	const [ isDragging, setDragging ] = useState( false );
+	const [ draggingId, setDraggingId ] = useState( false );
 	const { clientIdsTree, selectedClientIds } = useListViewClientIds(
 		blocks,
 		showOnlyCurrentHierarchy,
-		__experimentalPersistentListViewFeatures
+		__experimentalPersistentListViewFeatures,
+		draggingId
 	);
 	const { selectBlock } = useDispatch( blockEditorStore );
 	const selectEditorBlock = useCallback(
@@ -110,8 +111,7 @@ export default function ListView( {
 			expand,
 			collapse,
 			animate,
-			isDragging,
-			setDragging,
+			setDraggingId,
 		} ),
 		[
 			__experimentalFeatures,
@@ -121,8 +121,7 @@ export default function ListView( {
 			expand,
 			collapse,
 			animate,
-			isDragging,
-			setDragging,
+			setDraggingId,
 		]
 	);
 
@@ -141,6 +140,7 @@ export default function ListView( {
 						blocks={ clientIdsTree }
 						selectBlock={ selectEditorBlock }
 						selectedBlockClientIds={ selectedClientIds }
+						draggingId={ draggingId }
 						{ ...props }
 					/>
 				</ListViewContext.Provider>

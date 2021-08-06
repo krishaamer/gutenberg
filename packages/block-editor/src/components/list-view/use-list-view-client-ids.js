@@ -32,7 +32,8 @@ const useListViewSelectedClientIds = (
 const useListViewClientIdsTree = (
 	blocks,
 	selectedClientIds,
-	showOnlyCurrentHierarchy
+	showOnlyCurrentHierarchy,
+	draggingId
 ) =>
 	useSelect(
 		( select ) => {
@@ -49,14 +50,14 @@ const useListViewClientIdsTree = (
 			const isSingleBlockSelected =
 				selectedClientIds && ! Array.isArray( selectedClientIds );
 			if ( ! showOnlyCurrentHierarchy || ! isSingleBlockSelected ) {
-				return __unstableGetClientIdsTree();
+				return __unstableGetClientIdsTree( '', draggingId );
 			}
 
 			const rootBlock = __unstableGetClientIdWithClientIdsTree(
 				getBlockHierarchyRootClientId( selectedClientIds )
 			);
 			if ( ! rootBlock ) {
-				return __unstableGetClientIdsTree();
+				return __unstableGetClientIdsTree( '', draggingId );
 			}
 
 			const hasHierarchy =
@@ -66,15 +67,16 @@ const useListViewClientIdsTree = (
 				return [ rootBlock ];
 			}
 
-			return __unstableGetClientIdsTree();
+			return __unstableGetClientIdsTree( '', draggingId );
 		},
-		[ blocks, selectedClientIds, showOnlyCurrentHierarchy ]
+		[ blocks, selectedClientIds, showOnlyCurrentHierarchy, draggingId ]
 	);
 
 export default function useListViewClientIds(
 	blocks,
 	showOnlyCurrentHierarchy,
-	__experimentalPersistentListViewFeatures
+	__experimentalPersistentListViewFeatures,
+	draggingId
 ) {
 	const selectedClientIds = useListViewSelectedClientIds(
 		__experimentalPersistentListViewFeatures
@@ -82,7 +84,8 @@ export default function useListViewClientIds(
 	const clientIdsTree = useListViewClientIdsTree(
 		blocks,
 		selectedClientIds,
-		showOnlyCurrentHierarchy
+		showOnlyCurrentHierarchy,
+		draggingId
 	);
 	return { clientIdsTree, selectedClientIds };
 }

@@ -274,11 +274,15 @@ export const __unstableGetBlockTree = createSelector(
  * @return {Object} Client IDs of the post blocks.
  */
 export const __unstableGetClientIdWithClientIdsTree = createSelector(
-	( state, clientId ) => ( {
+	( state, clientId, draggingId = false, dropSibling = false ) => ( {
 		clientId,
-		innerBlocks: __unstableGetClientIdsTree( state, clientId ),
+		...( draggingId && {
+			dropContainer: canInsertBlocks( state, [ draggingId ], clientId ),
+			dropSibling,
+		} ),
+		innerBlocks: __unstableGetClientIdsTree( state, clientId, draggingId ),
 	} ),
-	( state ) => [ state.blocks.order ]
+	( state, draggingId ) => [ state.blocks.order, draggingId ]
 );
 
 /**
@@ -292,11 +296,17 @@ export const __unstableGetClientIdWithClientIdsTree = createSelector(
  * @return {Object[]} Client IDs of the post blocks.
  */
 export const __unstableGetClientIdsTree = createSelector(
-	( state, rootClientId = '' ) =>
+	( state, rootClientId = '', draggingId = false ) =>
 		map( getBlockOrder( state, rootClientId ), ( clientId ) =>
-			__unstableGetClientIdWithClientIdsTree( state, clientId )
+			__unstableGetClientIdWithClientIdsTree(
+				state,
+				clientId,
+				draggingId,
+				draggingId &&
+					canInsertBlocks( state, [ draggingId ], rootClientId )
+			)
 		),
-	( state ) => [ state.blocks.order ]
+	( state, draggingId ) => [ state.blocks.order, draggingId ]
 );
 
 /**

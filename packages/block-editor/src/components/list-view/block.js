@@ -44,6 +44,7 @@ export default function ListViewBlock( {
 	showBlockMovers,
 	isExpanded,
 	animateToggleOpen,
+	draggingId, //pass down to force render
 } ) {
 	const cellRef = useRef( null );
 	const [ isHovered, setIsHovered ] = useState( false );
@@ -75,7 +76,7 @@ export default function ListViewBlock( {
 		__experimentalPersistentListViewFeatures: withExperimentalPersistentListViewFeatures,
 		isTreeGridMounted,
 		animate,
-		setDragging,
+		setDraggingId,
 		collapse,
 		expand,
 	} = useListViewContext();
@@ -118,6 +119,12 @@ export default function ListViewBlock( {
 		highlightBlock( clientId, false );
 	};
 
+	const isFaded =
+		draggingId &&
+		draggingId !== clientId &&
+		block?.dropSibling === false &&
+		block?.dropContainer === false;
+
 	const classes = classnames( {
 		'block-editor-list-view-leaf': true,
 		'is-selected': isSelected,
@@ -126,16 +133,16 @@ export default function ListViewBlock( {
 		'is-last-of-selected-branch':
 			withExperimentalPersistentListViewFeatures &&
 			isLastOfSelectedBranch,
-		//'is-dragging': isDragging,
+		'is-faded': isFaded,
 	} );
 
 	const onDragStart = () => {
-		setDragging( true );
+		setDraggingId( clientId );
 		collapse( clientId );
 	};
 
 	const onDragEnd = () => {
-		setDragging( false );
+		setDraggingId( false );
 		expand( clientId );
 	};
 
