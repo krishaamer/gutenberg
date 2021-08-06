@@ -14,6 +14,8 @@ import { __experimentalUseCustomSides as useCustomSides } from '@wordpress/block
  */
 import { useSetting } from '../editor/utils';
 
+const AXIAL_SIDES = [ 'horizontal', 'vertical' ];
+
 export function useHasSpacingPanel( context ) {
 	const hasPadding = useHasPadding( context );
 	const hasMargin = useHasMargin( context );
@@ -41,7 +43,17 @@ function filterValuesBySides( values, sides ) {
 
 	// Only include sides opted into within filtered values.
 	const filteredValues = {};
-	sides.forEach( ( side ) => ( filteredValues[ side ] = values[ side ] ) );
+	sides.forEach( ( side ) => {
+		if ( side === 'vertical' ) {
+			filteredValues.top = values.top;
+			filteredValues.bottom = values.bottom;
+		}
+		if ( side === 'horizontal' ) {
+			filteredValues.left = values.left;
+			filteredValues.right = values.right;
+		}
+		filteredValues[ side ] = values[ side ];
+	} );
 
 	return filteredValues;
 }
@@ -77,6 +89,9 @@ export default function SpacingPanel( { context, getStyle, setStyle } ) {
 
 	const paddingValues = splitStyleValue( getStyle( name, 'padding' ) );
 	const paddingSides = useCustomSides( name, 'padding' );
+	const isAxialPadding =
+		paddingSides &&
+		paddingSides.some( ( side ) => AXIAL_SIDES.includes( side ) );
 
 	const setPaddingValues = ( newPaddingValues ) => {
 		const padding = filterValuesBySides( newPaddingValues, paddingSides );
@@ -85,6 +100,9 @@ export default function SpacingPanel( { context, getStyle, setStyle } ) {
 
 	const marginValues = splitStyleValue( getStyle( name, 'margin' ) );
 	const marginSides = useCustomSides( name, 'margin' );
+	const isAxialMargin =
+		marginSides &&
+		marginSides.some( ( side ) => AXIAL_SIDES.includes( side ) );
 
 	const setMarginValues = ( newMarginValues ) => {
 		const margin = filterValuesBySides( newMarginValues, marginSides );
@@ -100,6 +118,7 @@ export default function SpacingPanel( { context, getStyle, setStyle } ) {
 					label={ __( 'Padding' ) }
 					sides={ paddingSides }
 					units={ units }
+					splitOnAxis={ isAxialPadding }
 				/>
 			) }
 			{ showMarginControl && (
@@ -109,6 +128,7 @@ export default function SpacingPanel( { context, getStyle, setStyle } ) {
 					label={ __( 'Margin' ) }
 					sides={ marginSides }
 					units={ units }
+					splitOnAxis={ isAxialMargin }
 				/>
 			) }
 		</PanelBody>
