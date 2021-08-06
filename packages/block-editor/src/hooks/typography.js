@@ -3,8 +3,8 @@
  */
 import { getBlockSupport, hasBlockSupport } from '@wordpress/blocks';
 import {
-	__experimentalProgressiveDisclosurePanel as ProgressiveDisclosurePanel,
-	__experimentalProgressiveDisclosurePanelItem as ProgressiveDisclosurePanelItem,
+	__experimentalToolsPanel as ToolsPanel,
+	__experimentalToolsPanelItem as ToolsPanelItem,
 } from '@wordpress/components';
 import { Platform } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
@@ -112,83 +112,83 @@ export function TypographyPanel( props ) {
 
 	return (
 		<InspectorControls>
-			<ProgressiveDisclosurePanel
+			<ToolsPanel
 				label={ __( 'Typography options' ) }
-				title={ __( 'Typography' ) }
+				header={ __( 'Typography' ) }
 				resetAll={ resetAll }
 				className="typography-controls"
 			>
 				{ ! isFontFamilyDisabled && (
-					<ProgressiveDisclosurePanelItem
+					<ToolsPanelItem
 						hasValue={ () => hasFontFamilyValue( props ) }
 						label={ __( 'Font family' ) }
 						onDeselect={ () => resetFontFamily( props ) }
 						isShownByDefault={ defaultControls?.fontFamily }
 					>
 						<FontFamilyEdit { ...props } />
-					</ProgressiveDisclosurePanelItem>
+					</ToolsPanelItem>
 				) }
 				{ ! isFontSizeDisabled && (
-					<ProgressiveDisclosurePanelItem
+					<ToolsPanelItem
 						hasValue={ () => hasFontSizeValue( props ) }
 						label={ __( 'Font size' ) }
 						onDeselect={ () => resetFontSize( props ) }
 						isShownByDefault={ defaultControls?.fontSize }
 					>
 						<FontSizeEdit { ...props } />
-					</ProgressiveDisclosurePanelItem>
+					</ToolsPanelItem>
 				) }
 				{ ! isFontAppearanceDisabled && (
-					<ProgressiveDisclosurePanelItem
+					<ToolsPanelItem
 						hasValue={ () => hasFontAppearanceValue( props ) }
 						label={ __( 'Appearance' ) }
 						onDeselect={ () => resetFontAppearance( props ) }
 						isShownByDefault={ defaultControls?.fontAppearance }
 					>
 						<FontAppearanceEdit { ...props } />
-					</ProgressiveDisclosurePanelItem>
+					</ToolsPanelItem>
 				) }
 				{ ! isLineHeightDisabled && (
-					<ProgressiveDisclosurePanelItem
+					<ToolsPanelItem
 						hasValue={ () => hasLineHeightValue( props ) }
 						label={ __( 'Line height' ) }
 						onDeselect={ () => resetLineHeight( props ) }
 						isShownByDefault={ defaultControls?.lineHeight }
 					>
 						<LineHeightEdit { ...props } />
-					</ProgressiveDisclosurePanelItem>
+					</ToolsPanelItem>
 				) }
 				{ ! isTextDecorationDisabled && (
-					<ProgressiveDisclosurePanelItem
+					<ToolsPanelItem
 						hasValue={ () => hasTextDecorationValue( props ) }
 						label={ __( 'Decoration' ) }
 						onDeselect={ () => resetTextDecoration( props ) }
 						isShownByDefault={ defaultControls?.textDecoration }
 					>
 						<TextDecorationEdit { ...props } />
-					</ProgressiveDisclosurePanelItem>
+					</ToolsPanelItem>
 				) }
 				{ ! isTextTransformDisabled && (
-					<ProgressiveDisclosurePanelItem
+					<ToolsPanelItem
 						hasValue={ () => hasTextTransformValue( props ) }
 						label={ __( 'Letter case' ) }
 						onDeselect={ () => resetTextTransform( props ) }
 						isShownByDefault={ defaultControls?.textTransform }
 					>
 						<TextTransformEdit { ...props } />
-					</ProgressiveDisclosurePanelItem>
+					</ToolsPanelItem>
 				) }
 				{ ! isLetterSpacingDisabled && (
-					<ProgressiveDisclosurePanelItem
+					<ToolsPanelItem
 						hasValue={ () => hasLetterSpacingValue( props ) }
 						label={ __( 'Letter-spacing' ) }
 						onDeselect={ () => resetLetterSpacing( props ) }
 						isShownByDefault={ defaultControls?.letterSpacing }
 					>
 						<LetterSpacingEdit { ...props } />
-					</ProgressiveDisclosurePanelItem>
+					</ToolsPanelItem>
 				) }
-			</ProgressiveDisclosurePanel>
+			</ToolsPanel>
 		</InspectorControls>
 	);
 }

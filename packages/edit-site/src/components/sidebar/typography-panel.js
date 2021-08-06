@@ -10,8 +10,8 @@ import {
 	__experimentalTextTransformControl as TextTransformControl,
 } from '@wordpress/block-editor';
 import {
-	__experimentalProgressiveDisclosurePanel as ProgressiveDisclosurePanel,
-	__experimentalProgressiveDisclosurePanelItem as ProgressiveDisclosurePanelItem,
+	__experimentalToolsPanel as ToolsPanel,
+	__experimentalToolsPanelItem as ToolsPanelItem,
 	FontSizePicker,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
@@ -154,14 +154,14 @@ export default function TypographyPanel( {
 	};
 
 	return (
-		<ProgressiveDisclosurePanel
+		<ToolsPanel
 			label={ __( 'Typography options' ) }
-			title={ __( 'Typography' ) }
+			header={ __( 'Typography' ) }
 			resetAll={ resetAll }
 			className="typography-controls"
 		>
 			{ showFontFamilyControl && (
-				<ProgressiveDisclosurePanelItem
+				<ToolsPanelItem
 					hasValue={ createHasValueCallback( 'fontFamily' ) }
 					label={ __( 'Font family' ) }
 					onDeselect={ createResetCallback( 'fontFamily' ) }
@@ -172,10 +172,10 @@ export default function TypographyPanel( {
 						value={ getStyle( name, 'fontFamily' ) }
 						onChange={ handleOnChange( 'fontFamily' ) }
 					/>
-				</ProgressiveDisclosurePanelItem>
+				</ToolsPanelItem>
 			) }
 			{ showFontSizeControl && (
-				<ProgressiveDisclosurePanelItem
+				<ToolsPanelItem
 					hasValue={ createHasValueCallback( 'fontSize' ) }
 					label={ __( 'Font size' ) }
 					onDeselect={ createResetCallback( 'fontSize' ) }
@@ -188,10 +188,10 @@ export default function TypographyPanel( {
 						disableCustomFontSizes={ disableCustomFontSizes }
 						allowReset={ false }
 					/>
-				</ProgressiveDisclosurePanelItem>
+				</ToolsPanelItem>
 			) }
 			{ showAppearanceControl && (
-				<ProgressiveDisclosurePanelItem
+				<ToolsPanelItem
 					hasValue={ hasFontAppearanceValue }
 					label={ __( 'Appearance' ) }
 					onDeselect={ resetFontAppearance }
@@ -209,10 +209,10 @@ export default function TypographyPanel( {
 						hasFontStyles={ hasFontStyles }
 						hasFontWeights={ hasFontWeights }
 					/>
-				</ProgressiveDisclosurePanelItem>
+				</ToolsPanelItem>
 			) }
 			{ showLineHeightControl && (
-				<ProgressiveDisclosurePanelItem
+				<ToolsPanelItem
 					hasValue={ createHasValueCallback( 'lineHeight' ) }
 					label={ __( 'Line height' ) }
 					onDeselect={ createResetCallback( 'lineHeight' ) }
@@ -222,10 +222,10 @@ export default function TypographyPanel( {
 						value={ getStyle( name, 'lineHeight' ) }
 						onChange={ handleOnChange( 'lineHeight' ) }
 					/>
-				</ProgressiveDisclosurePanelItem>
+				</ToolsPanelItem>
 			) }
 			{ showTextDecoration && (
-				<ProgressiveDisclosurePanelItem
+				<ToolsPanelItem
 					hasValue={ createHasValueCallback( 'textDecoration' ) }
 					label={ __( 'Decoration' ) }
 					onDeselect={ createResetCallback( 'textDecoration' ) }
@@ -235,10 +235,10 @@ export default function TypographyPanel( {
 						value={ getStyle( name, 'textDecoration' ) }
 						onChange={ handleOnChange( 'textDecoration' ) }
 					/>
-				</ProgressiveDisclosurePanelItem>
+				</ToolsPanelItem>
 			) }
 			{ showTextTransform && (
-				<ProgressiveDisclosurePanelItem
+				<ToolsPanelItem
 					hasValue={ createHasValueCallback( 'textTransform' ) }
 					label={ __( 'Letter case' ) }
 					onDeselect={ createResetCallback( 'textTransform' ) }
@@ -248,10 +248,10 @@ export default function TypographyPanel( {
 						value={ getStyle( name, 'textTransform' ) }
 						onChange={ handleOnChange( 'textTransform' ) }
 					/>
-				</ProgressiveDisclosurePanelItem>
+				</ToolsPanelItem>
 			) }
 			{ showLetterSpacingControl && (
-				<ProgressiveDisclosurePanelItem
+				<ToolsPanelItem
 					hasValue={ createHasValueCallback( 'letterSpacing' ) }
 					label={ __( 'Letter-spacing' ) }
 					onDeselect={ createResetCallback( 'letterSpacing' ) }
@@ -261,8 +261,8 @@ export default function TypographyPanel( {
 						value={ getStyle( name, 'letterSpacing' ) }
 						onChange={ handleOnChange( 'letterSpacing' ) }
 					/>
-				</ProgressiveDisclosurePanelItem>
+				</ToolsPanelItem>
 			) }
-		</ProgressiveDisclosurePanel>
+		</ToolsPanel>
 	);
 }
