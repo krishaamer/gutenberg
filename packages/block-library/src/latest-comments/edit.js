@@ -8,6 +8,8 @@ import {
 	RangeControl,
 	ToggleControl,
 } from '@wordpress/components';
+import { store as coreStore } from '@wordpress/core-data';
+import { useSelect } from '@wordpress/data';
 import ServerSideRender from '@wordpress/server-side-render';
 import { __ } from '@wordpress/i18n';
 
@@ -31,6 +33,11 @@ export default function LatestComments( { attributes, setAttributes } ) {
 		displayDate,
 		displayExcerpt,
 	} = attributes;
+
+	const siteLanguage = useSelect(
+		( select ) => select( coreStore ).getSite()?.language,
+		[]
+	);
 
 	return (
 		<div { ...useBlockProps() }>
@@ -75,6 +82,7 @@ export default function LatestComments( { attributes, setAttributes } ) {
 				<ServerSideRender
 					block="core/latest-comments"
 					attributes={ attributes }
+					urlQueryArgs={ { _locale: siteLanguage } }
 				/>
 			</Disabled>
 		</div>
